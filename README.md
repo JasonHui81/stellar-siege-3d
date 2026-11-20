@@ -10,7 +10,7 @@
   <img alt="Platform" src="https://img.shields.io/badge/Platform-Windows%2010%2F11%20x64-2ea043?style=for-the-badge">
 </p>
 
-![游戏画面](assets/gameplay.jpg)
+![实机演示](assets/demo.gif)
 
 **任何人都能直接下**：不需要 GitHub 账号、不需要登录、不需要装 Python。点上面的按钮，浏览器就开始下载；解压后双击「启动游戏.bat」即可开玩。
 
