@@ -2,11 +2,7 @@
 
 一个用 **Python + Ursina + Panda3D** 写的单人太空飞行射击游戏。母星被死星炮击后，你驾驶战机冲进银河，穿越星云、击伤歼星舰，最后做出选择：降落新世界，还是把船开进黑洞。
 
-<h3 align="center">
-
-[⬇ 立即下载 · Windows 64 位 · 119.5 MB](https://github.com/JasonHui81/stellar-siege-3d/releases/latest/download/StellarSiege3D-Portable-v62.zip)
-
-</h3>
+<h2 align="center"><a href="https://github.com/JasonHui81/stellar-siege-3d/releases/latest/download/StellarSiege3D-Portable-v62.zip">⬇ 立即下载 星际围攻 3D（Windows 64 位 · 119.5 MB）</a></h2>
 
 <p align="center">
   <a href="https://jasonhui81.github.io/stellar-siege-3d/"><img alt="官网" src="https://img.shields.io/badge/%E5%AE%98%E7%BD%91-%E6%98%9F%E9%99%85%E5%9B%B4%E6%94%BB%203D-5ee7ff?style=for-the-badge"></a>
