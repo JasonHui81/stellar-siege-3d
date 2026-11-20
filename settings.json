@@ -1,0 +1,14 @@
+{
+  "volume": 0.8,
+  "brightness": 1.0,
+  "lang": "zh",
+  "lighting": true,
+  "endings": [
+    false,
+    false,
+    false,
+    true,
+    false,
+    false
+  ]
+}

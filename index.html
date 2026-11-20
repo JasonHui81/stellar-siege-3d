@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1">
+<title>星际围攻 3D · STELLAR SIEGE 3D — 官方下载页</title>
+<meta name="description" content="星际围攻 3D（STELLAR SIEGE 3D）：Ursina + Panda3D 制作的太空飞行射击游戏，6 个结局、程序化银河、驾驶舱视角。Windows 免安装便携版免费下载。">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap">
+<style>
+/* ===== 基础 ===== */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#04060c; --bg2:#080d18; --panel:#0b1424; --line:rgba(94,231,255,.16);
+  --cyan:#5ee7ff; --cyan-d:#2a9fb8; --amber:#ffb347; --text:#e3ecf8; --muted:#8fa3bf;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg); color:var(--text);
+  font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+
+/* ===== 星空背景 ===== */
+.stars{
+  position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:
+    radial-gradient(1.2px 1.2px at 12% 18%,rgba(255,255,255,.85),transparent 60%),
+    radial-gradient(1px 1px at 38% 62%,rgba(180,230,255,.7),transparent 60%),
+    radial-gradient(1.4px 1.4px at 71% 27%,rgba(255,255,255,.9),transparent 60%),
+    radial-gradient(1px 1px at 88% 74%,rgba(255,210,150,.7),transparent 60%),
+    radial-gradient(1px 1px at 54% 8%,rgba(255,255,255,.6),transparent 60%),
+    radial-gradient(1.6px 1.6px at 26% 88%,rgba(200,240,255,.75),transparent 60%),
+    radial-gradient(900px 520px at 78% 6%,rgba(58,120,180,.18),transparent 70%),
+    radial-gradient(760px 460px at 12% 42%,rgba(120,60,170,.14),transparent 70%),
+    linear-gradient(180deg,#04060c 0%,#070b14 45%,#04060b 100%);
+}
+.stars::after{
+  content:"";position:absolute;inset:0;
+  background-image:linear-gradient(rgba(94,231,255,.05) 1px,transparent 1px),
+                    linear-gradient(90deg,rgba(94,231,255,.05) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(circle at 50% 30%,#000 10%,transparent 78%);
+  -webkit-mask-image:radial-gradient(circle at 50% 30%,#000 10%,transparent 78%);
+}
+
+/* ===== 顶部导航 ===== */
+header{
+  position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);
+  background:linear-gradient(180deg,rgba(4,6,12,.92),rgba(4,6,12,.55));
+  border-bottom:1px solid var(--line);
+}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.14em;font-size:14px}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--cyan);box-shadow:0 0 12px var(--cyan)}
+.brand span.sub{color:var(--muted);font-weight:400;letter-spacing:.05em;font-size:12px}
+.nav-links{display:flex;gap:26px;font-size:13px;color:var(--muted)}
+.nav-links a:hover{color:var(--cyan)}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  padding:12px 24px;border-radius:999px;font-size:14px;font-weight:600;letter-spacing:.04em;
+  border:1px solid var(--cyan);color:#04121a;background:linear-gradient(135deg,#7cf0ff,#38c7e4);
+  box-shadow:0 0 24px rgba(94,231,255,.28);transition:.25s;white-space:nowrap;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 0 38px rgba(94,231,255,.5)}
+.btn.ghost{background:transparent;color:var(--cyan);box-shadow:none}
+.btn.ghost:hover{background:rgba(94,231,255,.08)}
+.btn.small{padding:9px 18px;font-size:13px}
+
+/* ===== HERO ===== */
+.hero{position:relative;padding:74px 0 90px;overflow:hidden}
+.hero-bg{
+  position:absolute;inset:0;z-index:-1;
+  background-image:url("assets/gameplay.jpg");
+  background-size:cover;background-position:center 35%;
+  filter:saturate(1.05);
+  opacity:.5;
+}
+.hero-bg::after{content:"";position:absolute;inset:0;background:
+  radial-gradient(80% 90% at 50% 20%,rgba(4,6,12,.28),rgba(4,6,12,.92) 78%),
+  linear-gradient(180deg,rgba(4,6,12,.75),transparent 35%,var(--bg) 96%)}
+.hero-inner{max-width:1180px;margin:0 auto;padding:0 24px}
+.tag{
+  display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.22em;color:var(--cyan);
+  border:1px solid var(--line);background:rgba(94,231,255,.06);padding:7px 14px;border-radius:999px;margin-bottom:26px;
+}
+h1{
+  font-size:clamp(38px,6.6vw,76px);line-height:1.02;font-weight:900;letter-spacing:.02em;
+  background:linear-gradient(180deg,#ffffff 10%,#a9e8ff 60%,#5ee7ff 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  text-shadow:0 0 60px rgba(94,231,255,.35);
+}
+.en-title{margin-top:10px;font-size:clamp(13px,1.8vw,17px);letter-spacing:.42em;color:var(--muted)}
+.hero-desc{margin-top:26px;max-width:640px;font-size:16px;line-height:1.95;color:#c3d3e6}
+.meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+.chip{
+  font-size:12.5px;color:#b9cbe0;padding:8px 14px;border-radius:8px;
+  border:1px solid rgba(143,163,191,.22);background:rgba(11,20,36,.7);
+}
+.chip b{color:var(--cyan);font-weight:600}
+.cta-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:36px;align-items:center}
+.cta-row .btn{padding:16px 34px;font-size:15px}
+.hint{font-size:12.5px;color:var(--muted);line-height:1.7}
+
+/* ===== 通用区块 ===== */
+section{padding:86px 0}
+.sec-head{max-width:760px;margin-bottom:46px}
+.sec-head .kicker{font-size:12px;letter-spacing:.28em;color:var(--cyan);margin-bottom:14px}
+.sec-head h2{font-size:clamp(26px,3.6vw,38px);font-weight:800;letter-spacing:.01em;line-height:1.25}
+.sec-head p{margin-top:14px;color:var(--muted);line-height:1.9;font-size:15px}
+
+/* ===== 特色 ===== */
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.card{
+  position:relative;padding:28px 26px 30px;border-radius:16px;
+  background:linear-gradient(160deg,rgba(17,28,48,.9),rgba(8,13,24,.86));
+  border:1px solid rgba(94,231,255,.12);
+  transition:.3s;
+}
+.card:hover{border-color:rgba(94,231,255,.4);transform:translateY(-4px);box-shadow:0 18px 50px rgba(0,0,0,.5)}
+.card .num{font-size:11px;letter-spacing:.2em;color:var(--cyan-d);margin-bottom:16px}
+.card h3{font-size:17.5px;font-weight:700;margin-bottom:12px}
+.card p{font-size:14px;line-height:1.85;color:var(--muted)}
+
+/* ===== 截图 ===== */
+.shots{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.shot{position:relative;overflow:hidden;border-radius:14px;border:1px solid rgba(94,231,255,.14);cursor:zoom-in;background:#000}
+.shot img{width:100%;height:100%;object-fit:cover;transition:.5s;aspect-ratio:16/9}
+.shot:hover img{transform:scale(1.045)}
+.shot .cap{
+  position:absolute;left:0;right:0;bottom:0;padding:26px 18px 12px;
+  background:linear-gradient(180deg,transparent,rgba(3,6,12,.92));
+  font-size:12.5px;color:#cfe0f2;letter-spacing:.04em;
+}
+.s1{grid-column:span 7}.s2{grid-column:span 5}.s3,.s4,.s5{grid-column:span 4}
+.s6,.s7{grid-column:span 6}
+.s8{grid-column:span 12}
+
+/* ===== 结局 ===== */
+.endings{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.ending{
+  padding:22px 20px;border-radius:12px;border:1px solid rgba(143,163,191,.18);
+  background:rgba(11,20,36,.6);
+}
+.ending.on{border-color:rgba(255,179,71,.34);background:linear-gradient(150deg,rgba(60,40,16,.55),rgba(11,20,36,.7))}
+.ending .no{font-size:11px;letter-spacing:.16em;color:var(--muted);margin-bottom:10px}
+.ending h4{font-size:15.5px;font-weight:700;margin-bottom:8px}
+.ending p{font-size:13px;line-height:1.8;color:var(--muted)}
+.locked{color:#5f718c}
+.ending.on h4{color:var(--amber)}
+
+/* ===== 操作表 ===== */
+.keys{width:100%;border-collapse:collapse;font-size:14px}
+.keys th,.keys td{padding:12px 14px;border-bottom:1px solid rgba(143,163,191,.14);text-align:left}
+.keys th{font-size:12px;letter-spacing:.16em;color:var(--cyan);font-weight:600;border-bottom-color:rgba(94,231,255,.24)}
+.keys td:first-child{width:220px;color:#fff;font-family:ui-monospace,Consolas,monospace;letter-spacing:.04em;white-space:nowrap}
+.keys td:last-child{color:#b7c8dc}
+.keys tr:hover td{background:rgba(94,231,255,.05)}
+
+/* ===== 要求 / FAQ ===== */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.info-box{padding:28px;border-radius:14px;background:rgba(11,20,36,.62);border:1px solid rgba(94,231,255,.12)}
+.info-box h4{font-size:13px;letter-spacing:.18em;color:var(--cyan);margin-bottom:18px}
+.info-box ul{list-style:none;font-size:14px;line-height:2.1;color:#bccddf}
+.info-box li{display:flex;justify-content:space-between;gap:16px;border-bottom:1px dashed rgba(143,163,191,.16);padding:6px 0}
+.info-box li span:first-child{color:var(--muted)}
+.info-box li span:last-child{color:#e8f1fb}
+.faq{display:grid;gap:12px}
+.qa{border:1px solid rgba(143,163,191,.16);border-radius:12px;background:rgba(9,15,27,.7);overflow:hidden}
+.qa summary{cursor:pointer;padding:18px 22px;font-size:14.5px;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:14px}
+.qa summary::-webkit-details-marker{display:none}
+.qa summary .plus{color:var(--cyan);transition:.3s}
+.qa[open] summary .plus{transform:rotate(45deg)}
+.qa .ans{padding:0 22px 20px;font-size:14px;line-height:1.95;color:var(--muted)}
+
+/* ===== 下载 CTA ===== */
+.dl{padding:0 0 96px}
+.dl-box{
+  position:relative;text-align:center;padding:60px 30px;border-radius:20px;overflow:hidden;
+  border:1px solid rgba(94,231,255,.26);
+  background:radial-gradient(90% 130% at 50% 0%,rgba(94,231,255,.14),rgba(8,13,24,.94) 62%);
+}
+.dl-box h2{font-size:clamp(24px,3.4vw,34px);font-weight:800}
+.dl-box p{margin:16px auto 30px;max-width:560px;color:var(--muted);line-height:1.9;font-size:14.5px}
+.dl-note{margin-top:22px;font-size:12.5px;color:#6f829c;line-height:1.8}
+
+footer{border-top:1px solid rgba(143,163,191,.14);padding:34px 0 46px;font-size:12.5px;color:#6f829c;line-height:2}
+footer .creds{display:flex;flex-wrap:wrap;gap:8px 26px;justify-content:space-between}
+
+/* ===== 灯箱 ===== */
+.lightbox{
+  position:fixed;inset:0;z-index:100;display:none;place-items:center;padding:4vw;
+  background:rgba(2,4,9,.94);backdrop-filter:blur(6px);cursor:zoom-out;
+}
+.lightbox img{border-radius:10px;box-shadow:0 30px 90px rgba(0,0,0,.8);max-height:88vh;width:auto}
+
+/* ===== 响应式 ===== */
+@media(max-width:900px){
+  .nav-links{display:none}
+  .shots{grid-template-columns:repeat(6,1fr)}
+  .s1,.s2,.s3,.s4,.s5,.s6,.s7,.s8{grid-column:span 6}
+  .two-col{grid-template-columns:1fr}
+  section{padding:64px 0}
+  .hero{padding:56px 0 66px}
+  .keys td:first-child{width:130px;white-space:normal}
+  .cta-row .btn{width:100%}
+}
+@media(max-width:560px){
+  .hero{padding:42px 0 54px}
+  .cta-row .btn{padding:14px 22px}
+  .shots{gap:10px}
+  section{padding:54px 0}
+}
+</style>
+</head>
+<body>
+<div class="stars"></div>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand"><span class="dot"></span>STELLAR SIEGE 3D&nbsp;<span class="sub">星际围攻</span></div>
+    <nav class="nav-links">
+      <a href="#features">特色</a>
+      <a href="#shots">画面</a>
+      <a href="#keys">操作</a>
+      <a href="#faq">常见问题</a>
+    </nav>
+    <a class="btn small js-dl" href="#download">下载</a>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div class="tag">PYTHON + URSINA · 单人太空射击 · v62</div>
+    <h1>星际围攻 3D</h1>
+    <div class="en-title">STELLAR SIEGE 3D</div>
+    <p class="hero-desc">
+      母星被死星炮击，你驾驶最后一批战机冲进银河。穿越星云、躲避钛战机、击伤歼星舰，
+      然后在最后一刻做出选择 —— 降落新世界，还是把船开进黑洞。
+    </p>
+    <div class="meta-row">
+      <div class="chip">平台 <b>Windows 10 / 11 64 位</b></div>
+      <div class="chip">体积 <b>约 120 MB</b></div>
+      <div class="chip">形式 <b>免安装便携版</b></div>
+      <div class="chip">结局 <b>6 个</b></div>
+      <div class="chip">价格 <b>免费</b></div>
+    </div>
+    <div class="cta-row">
+      <a class="btn js-dl" href="#download">下载游戏 · 120 MB</a>
+      <a class="btn ghost" href="#keys">先看怎么操作</a>
+      <span class="hint">解压后双击「启动游戏.bat」即可开玩<br>不需要装 Python，不需要联网</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 特色 ===== -->
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">WHAT'S INSIDE</div>
+      <h2>一个人用 AI 写的太空游戏，做满了该有的细节</h2>
+      <p>没有用任何外部美术素材：银河、飞船、音效、星空，全部是代码生成的。</p>
+    </div>
+    <div class="features">
+      <div class="card"><div class="num">01</div><h3>程序化银河</h3><p>4096×2048 等距柱状投影，5 万+ 颗星、倾斜银河带、尘埃暗巷、紫青星云斑块，左右无缝环绕，纯 numpy 生成。</p></div>
+      <div class="card"><div class="num">02</div><h3>三种视角</h3><p>追尾视角、第一人称、驾驶舱内景。舱内有控制台、反应堆、绿植和床铺，透过舷窗看外面的星河。</p></div>
+      <div class="card"><div class="num">03</div><h3>猎兵级歼星舰</h3><p>Boss 是一艘 8 段收窄船体的母舰，配三座会瞄准你的炮塔，加钛战机与拦截机编队。</p></div>
+      <div class="card"><div class="num">04</div><h3>20 个合成音效</h3><p>激光、爆炸、警报、护盾、充能……连同背景音乐，全部由 Python 的波形函数现场合成，零版权风险。</p></div>
+      <div class="card"><div class="num">05</div><h3>生存系统</h3><p>HP、能量、口渴、饥饿、等级、护盾、导弹、炸弹、悬停充能。打不动了就停下来充电，再冲上去。</p></div>
+      <div class="card"><div class="num">06</div><h3>六个结局</h3><p>降落、黑洞、被击落、击毁母舰……每个结局都有独立的过场字幕和结算面板，结局收集在主菜单里。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 截图 ===== -->
+<section id="shots">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">SCREENSHOTS</div>
+      <h2>真机截图</h2>
+      <p>全部来自实际运行的画面，不是概念图。</p>
+    </div>
+    <div class="shots">
+      <div class="shot s1 js-shot"><img src="assets/gameplay.jpg" alt="游戏内截图：驾驶战机穿越银河"><div class="cap">飞行中 · HUD 与银河全景</div></div>
+      <div class="shot s2 js-shot"><img src="assets/boss.jpg" alt="游戏内截图：1400 米外的猎兵级歼星舰"><div class="cap">1400 米外的歼星舰</div></div>
+      <div class="shot s3 js-shot"><img src="assets/cockpit.jpg" alt="游戏内截图：驾驶舱内景视角"><div class="cap">驾驶舱内景</div></div>
+      <div class="shot s4 js-shot"><img src="assets/nebula.jpg" alt="游戏内截图：进入星云"><div class="cap">踏入星云</div></div>
+      <div class="shot s5 js-shot"><img src="assets/blackhole.jpg" alt="游戏内截图：黑洞与吸积盘"><div class="cap">星云尽头的黑洞</div></div>
+      <div class="shot s6 js-shot"><img src="assets/ruins.jpg" alt="游戏内截图：被摧毁的母星遗迹"><div class="cap">被摧毁的母星遗迹</div></div>
+      <div class="shot s7 js-shot"><img src="assets/menu.jpg" alt="游戏截图：主菜单"><div class="cap">主菜单</div></div>
+      <div class="shot s8 js-shot"><img src="assets/hints.jpg" alt="游戏截图：屏幕上的操作提示"><div class="cap">屏内操作提示（按 F2 可隐藏）</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 结局 ===== -->
+<section id="endings">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">ENDINGS</div>
+      <h2>六个结局，自己一个个试出来</h2>
+      <p>主菜单里有结局收集面板，解锁过的会亮起来。</p>
+    </div>
+    <div class="endings">
+      <div class="ending on"><div class="no">ENDING 01</div><h4>降落新世界</h4><p>飞到距离星球中心 520 米内按 K，触发约 12 秒的降落过场与结算。</p></div>
+      <div class="ending on"><div class="no">ENDING 02</div><h4>坠入黑洞</h4><p>靠近星云按 O，穿过星云抵达黑洞，被引力拉长、吸进去。</p></div>
+      <div class="ending on"><div class="no">ENDING 03</div><h4>被帝国击落</h4><p>被钛战机与炮塔围殴到船体归零，108 块碎片炸开。</p></div>
+      <div class="ending"><div class="no">ENDING 04</div><h4 class="locked">？？？</div><p class="locked">这一条留给你自己发现。</p></div>
+      <div class="ending"><div class="no">ENDING 05</div><h4 class="locked">？？？</h4><p class="locked">提示：母舰的弱点不在正面。</p></div>
+      <div class="ending"><div class="no">ENDING 06</div><h4 class="locked">？？？</h4><p class="locked">提示：有些选择需要开到很近。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 操作 ===== -->
+<section id="keys">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">CONTROLS</div>
+      <h2>操作</h2>
+      <p>键盘 + 鼠标。W 加 Shift 是双倍加速，耗电也是双倍。</p>
+    </div>
+    <table class="keys">
+      <tr><th>按键</th><th>作用</th></tr>
+      <tr><td>W / S</td><td>前进 / 倒退（消耗能量）</td></tr>
+      <tr><td>A / D</td><td>左右偏航</td></tr>
+      <tr><td>↑ / ↓</td><td>抬头 / 低头</td></tr>
+      <tr><td>W + Shift</td><td>双倍加速（耗电也双倍）</td></tr>
+      <tr><td>鼠标左键</td><td>开火（每发 5 能量）</td></tr>
+      <tr><td>1 / 2 / 3</td><td>单发 / 三连散射 / 高速连射</td></tr>
+      <tr><td>空格</td><td>冲刺（带无敌帧）；片头中 = 跳过片头</td></tr>
+      <tr><td>J</td><td>悬停充能（必须停下）</td></tr>
+      <tr><td>Q / E / F</td><td>治疗 / 喝水 / 进食</td></tr>
+      <tr><td>R</td><td>护盾（4 秒）；结算画面 = 重开</td></tr>
+      <tr><td>P</td><td>切换视角：追尾 / 第一人称 / 驾驶舱</td></tr>
+      <tr><td>4 / 5</td><td>导弹 / 炸弹</td></tr>
+      <tr><td>K</td><td>降落星球</td></tr>
+      <tr><td>O</td><td>星云附近 = 进入黑洞；其他位置 = 暂停</td></tr>
+      <tr><td>M / F2 / ESC</td><td>静音 / 显示隐藏提示 / 退出</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ===== 要求 + FAQ ===== -->
+<section id="faq">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">REQUIREMENTS & FAQ</div>
+      <h2>下载之前</h2>
+    </div>
+    <div class="two-col">
+      <div class="info-box">
+        <h4>运行要求</h4>
+        <ul>
+          <li><span>系统</span><span>Windows 10 / 11 64 位</span></li>
+          <li><span>显卡</span><span>支持 OpenGL（集显也可以）</span></li>
+          <li><span>磁盘</span><span>约 280 MB（解压后）</span></li>
+          <li><span>分辨率</span><span>建议 1280×720 以上</span></li>
+          <li><span>网络</span><span>下载时需要，玩的时候不需要</span></li>
+          <li><span>安装</span><span>不需要，解压即玩</span></li>
+        </ul>
+      </div>
+      <div class="faq">
+        <details class="qa" open>
+          <summary>为什么不能直接在网页里玩？<span class="plus">+</span></summary>
+          <div class="ans">这个游戏是用 Ursina + Panda3D 的桌面引擎写的，浏览器没有对应的 WebGL 运行时，所以只能下载到 Windows 上跑。要做纯网页版得换成 Three.js 重写一遍，那是另一个项目。</div>
+        </details>
+        <details class="qa">
+          <summary>解压后打不开怎么办？<span class="plus">+</span></summary>
+          <div class="ans">先双击「启动游戏-调试.bat」，它会保留命令行窗口并把具体报错显示出来。多数情况是显卡驱动太旧，更新驱动即可。</div>
+        </details>
+        <details class="qa">
+          <summary>会被杀毒软件拦吗？<span class="plus">+</span></summary>
+          <div class="ans">包里是 Python 官方解释器 + 开源引擎，没有加壳。个别杀软对 .bat 启动器敏感，可以放行，或直接用调试版启动器。</div>
+        </details>
+        <details class="qa">
+          <summary>可以转发给别人吗？<span class="plus">+</span></summary>
+          <div class="ans">可以，直接把这个下载页的链接发出去就行。游戏本体免费。</div>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 下载 ===== -->
+<div class="wrap dl" id="download">
+  <div class="dl-box">
+    <h2>下载星际围攻 3D</h2>
+    <p>Windows 64 位免安装便携版 · 约 120 MB · 解压后双击「启动游戏.bat」开玩。</p>
+    <a class="btn js-dl" href="https://github.com/JasonHui81/stellar-siege-3d/releases/latest/download/StellarSiege3D-Portable-v62.zip">从 GitHub 下载（zip · 120 MB）</a>
+    <a class="btn ghost js-dl" href="https://my.feishu.cn/file/SmpObU1xnow4uZxjCrBcFItnnMg" style="margin-left:12px">飞书云盘备用链接</a>
+    <div class="dl-note">下载后请先解压到磁盘再运行，不要在压缩包里直接双击。<br>GitHub 直链在任何地区都能下；飞书链接国内速度更快。</div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="creds">
+      <span>源码与发布　<a href="https://github.com/JasonHui81/stellar-siege-3d" style="color:#8fd7ea">github.com/JasonHui81/stellar-siege-3d</a></span>
+      <span>制作人　许智皓</span>
+      <span>程序　DeepSeek（AI 编程助手）</span>
+      <span>引擎　Python 3.14 + Ursina 8.3 + Panda3D 1.10</span>
+    </div>
+    <div style="margin-top:16px;color:#4d5c72">STELLAR SIEGE 3D · 星际围攻 · v62 · 本页仅用于作品展示与下载，非商业发行。</div>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox"><img alt="放大查看"></div>
+
+<script>
+/* 截图灯箱 */
+(function(){
+  var lb = document.getElementById('lightbox');
+  var big = lb.querySelector('img');
+  document.querySelectorAll('.js-shot').forEach(function(el){
+    el.addEventListener('click', function(){
+      var src = el.querySelector('img').getAttribute('src');
+      big.setAttribute('src', src);
+      lb.style.display = 'grid';
+    });
+  });
+  lb.addEventListener('click', function(){ lb.style.display = 'none'; });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') lb.style.display = 'none'; });
+})();
+</script>
+</body>
+</html>
