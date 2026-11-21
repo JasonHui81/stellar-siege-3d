@@ -2,17 +2,17 @@
 
 一个用 **Python + Ursina + Panda3D** 写的单人太空飞行射击游戏。母星被死星炮击后，你驾驶战机冲进银河，穿越星云、击伤歼星舰，最后做出选择：降落新世界，还是把船开进黑洞。
 
-<h2 align="center"><a href="https://github.com/JasonHui81/stellar-siege-3d/releases/latest/download/StellarSiege3D-Portable-v62.zip">⬇ 立即下载 星际围攻 3D（Windows 64 位 · 119.5 MB）</a></h2>
+<h2 align="center"><a href="https://github.com/JasonHui81/stellar-siege-3d/releases/latest/download/StellarSiege3D-Portable.zip">⬇ 立即下载 星际围攻 3D（Windows 64 位 · 119.6 MB）</a></h2>
 
 <p align="center">
   <a href="https://jasonhui81.github.io/stellar-siege-3d/"><img alt="官网" src="https://img.shields.io/badge/%E5%AE%98%E7%BD%91-%E6%98%9F%E9%99%85%E5%9B%B4%E6%94%BB%203D-5ee7ff?style=for-the-badge"></a>
-  <a href="https://github.com/JasonHui81/stellar-siege-3d/releases"><img alt="Releases" src="https://img.shields.io/badge/Releases-v62-ffb347?style=for-the-badge"></a>
+  <a href="https://github.com/JasonHui81/stellar-siege-3d/releases"><img alt="Releases" src="https://img.shields.io/badge/Releases-v75-ffb347?style=for-the-badge"></a>
   <img alt="Platform" src="https://img.shields.io/badge/Platform-Windows%2010%2F11%20x64-2ea043?style=for-the-badge">
 </p>
 
 ![实机演示](assets/demo.gif)
 
-**任何人都能直接下**：不需要 GitHub 账号、不需要登录、不需要装 Python。点上面的按钮，浏览器就开始下载；解压后双击「启动游戏.bat」即可开玩。
+**任何人都能直接下**：不需要 GitHub 账号、不需要登录、不需要装 Python。点上面的按钮，浏览器就开始下载；解压后双击「启动游戏.bat」（或进 `game` 文件夹双击 `Stellar Siege 3D.exe`）即可开玩。
 
 <p align="center">
   <img src="assets/boss.jpg" width="32%"> <img src="assets/cockpit.jpg" width="32%"> <img src="assets/blackhole.jpg" width="32%">
@@ -20,11 +20,17 @@
 
 ## 三步开玩
 
-1. **下载**：点上面的「立即下载」，得到 `StellarSiege3D-Portable-v62.zip`（119.5 MB）
+1. **下载**：点上面的「立即下载」，得到 `StellarSiege3D-Portable.zip`（119.6 MB）
 2. **解压**：解压到硬盘任意位置（不要在压缩包里直接双击运行）
-3. **启动**：双击 `启动游戏.bat`，等几秒就进游戏
+3. **启动**：双击 `启动游戏.bat`，等几秒就进游戏；也可以进 `game` 文件夹双击 `Stellar Siege 3D.exe`
 
 打不开时用 `启动游戏-调试.bat`，它会保留命令行窗口把报错显示出来。
+
+## 最新版本 v75
+
+- 新增独立启动器 `Stellar Siege 3D.exe`（不依赖 bat，双击直接进游戏）
+- 游戏内「设置」可切换中英文界面
+- 屏幕下方常驻按键提示，不会操作也能照着按
 
 ## 游戏内容
 

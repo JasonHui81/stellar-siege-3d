@@ -1814,26 +1814,29 @@ class Mothership(Entity):
             self.turrets.append({'ent': tur_ent, 'head': tur_ent, 'muzzle': muzzle,
                                  'cd': random.uniform(0.4, 1.6), 'flash': 0.0})
 
-    def _fire_turret(self, tur, angles, dmg, speed, spread_pitch=0.0):
+    def _fire_turret(self, tur, aim, angles, dmg, speed):
+        """朝 aim 这个点开火（角度只用于 2 号武器的左右散射），保证弹道精确指向目标。"""
         head = tur['head']
         try:
-            fwd = head.forward            # Ursina 没有 world_forward
-            fwd = Vec3(fwd.x, fwd.y, fwd.z).normalized()
+            origin = head.world_position
         except Exception:
-            ry = math.radians(float(getattr(head, 'world_rotation_y', head.rotation_y)))
-            fwd = Vec3(math.sin(ry), 0.0, math.cos(ry))
-        try:
-            origin = head.world_position + fwd * 110
-        except Exception:
-            origin = head.position + fwd * 110
+            origin = head.position
+        d = aim - origin
+        if d.length() < 1.0:
+            return
+        d = d.normalized()
+        # 以世界 up 为轴做左右散射
+        side = d.cross(Vec3(0, 1, 0))
+        if side.length() < 0.01:
+            side = Vec3(1, 0, 0)
+        side = side.normalized()
+        origin = origin + d * 70
         for ang in angles:
             a = math.radians(ang)
-            d = Vec3(fwd.x * math.cos(a) + fwd.z * math.sin(a),
-                     fwd.y + math.tan(math.radians(spread_pitch)),
-                     -fwd.x * math.sin(a) + fwd.z * math.cos(a)).normalized()
-            Bullet(origin, d, dmg, False, boss=True, speed=speed, size=1.25)
+            dir2 = (d * math.cos(a) + side * math.sin(a)).normalized()
+            Bullet(origin, dir2, dmg, False, boss=True, speed=speed, size=1.25)
         tur['flash'] = 0.08
-        play_sfx('enemy_laser', volume=0.4, pitch=random.uniform(0.8, 1.0))
+        play_sfx('enemy_laser', volume=0.4, pitch=random.uniform(0.85, 1.0))
 
     def flash_hit(self, pos):
         """被打中：闪白/红光 + 火花 + 命中光圈。"""
@@ -1932,8 +1935,13 @@ class Mothership(Entity):
                     pass
             if not player.visible:
                 continue
+            # 只锁玩家：按玩家当前速度给一点提前量（弹速越快提前量越小）
             try:
-                d = to_player - head.world_position
+                aim = player.position + player.vel * 0.10
+            except Exception:
+                aim = player.position
+            try:
+                d = aim - head.world_position
                 flat = math.hypot(d.x, d.z)
                 head.rotation_y = math.degrees(math.atan2(d.x, d.z))
                 head.rotation_x = -math.degrees(math.atan2(d.y, flat))
@@ -1942,26 +1950,30 @@ class Mothership(Entity):
             tur['cd'] -= dt
             if tur['cd'] > 0:
                 continue
-            dist = (to_player - head.world_position).length()
+            dist = (aim - head.world_position).length()
             if dist > 800:
                 # 远距离：1 号武器（单发，伤害高）
                 tur['cd'] = 1.7
-                self._fire_turret(tur, (0.0,), 22, 100)
+                self._fire_turret(tur, aim, (0.0,), 22, 100)
             elif dist > 500:
                 # 中距离：2 号武器（三连散射）
                 tur['cd'] = 2.0
-                self._fire_turret(tur, (-15.0, 0.0, 15.0), 14, 95)
+                self._fire_turret(tur, aim, (-15.0, 0.0, 15.0), 14, 95)
             else:
                 # 近距离：3 号武器（快速连射）
                 tur['cd'] = 0.20
-                self._fire_turret(tur, (0.0,), 8, 140, spread_pitch=random.uniform(-1.5, 1.5))
+                self._fire_turret(tur, aim, (0.0,), 8, 140)
         # 主炮：朝玩家打
         self.gun_cd -= dt
         if self.gun_cd <= 0 and not game_state['over']:
             self.gun_cd = MOTHER_GUN_CD
+            try:
+                gun_aim = player.position + player.vel * 0.10
+            except Exception:
+                gun_aim = player.position
             for off in (Vec3(-270, 70, -230), Vec3(270, 70, -230), Vec3(0, 130, -300)):
                 start = self.position + off
-                d = (player.position - start).normalized()
+                d = (gun_aim - start).normalized()
                 Bullet(start + d * 8, d, 16, False, boss=True)
             play_sfx('enemy_laser', volume=0.45, pitch=0.75)
         # 从腹部机库放出钛战机（歼星舰的招牌手段）
@@ -2109,17 +2121,23 @@ def check_collisions():
     if game_state["landing"] or game_state["nebula"]: return
     ms = mothership
     for b in bullets[:]:
-        if ms is not None and ms.alive and b.friendly:
-            if ms.hit_test(b.position):
+        if b.friendly:
+            # 玩家子弹：只打敌机 / 歼星舰
+            if ms is not None and ms.alive and ms.hit_test(b.position):
                 ms.take_damage(b.dmg, b.position)
                 burst(b.position, color.orange, 3)
                 destroy(b)
                 continue
-        for e in enemies[:]:
-            if (b.position - e.position).length_squared() < 6.25: e.take_damage(b.dmg); destroy(b); break
+            for e in enemies[:]:
+                if (b.position - e.position).length_squared() < 6.25:
+                    e.take_damage(b.dmg)
+                    destroy(b)
+                    break
         else:
-            if not b.friendly and (player.position - b.position).length_squared() < 6.25:
-                player.take_damage(b.dmg, boss=getattr(b, 'boss', False)); destroy(b)
+            # 敌方子弹（歼星舰炮火 / 钛战机）：只可能打到玩家，绝不误伤自己人
+            if (player.position - b.position).length_squared() < 6.25:
+                player.take_damage(b.dmg, boss=getattr(b, 'boss', False))
+                destroy(b)
 
 def global_update():
     if game_state.get('menu'):
