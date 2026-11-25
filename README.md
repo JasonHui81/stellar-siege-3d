@@ -2,7 +2,7 @@
 
 一个用 **Python + Ursina + Panda3D** 写的单人太空飞行射击游戏。母星被死星炮击后，你驾驶战机冲进银河，穿越星云、击伤歼星舰，最后做出选择：降落新世界，还是把船开进黑洞。
 
-<h2 align="center"><a href="https://github.com/JasonHui81/stellar-siege-3d/releases/latest/download/StellarSiege3D-Portable.zip">⬇ 立即下载 星际围攻 3D（Windows 64 位 · 119.6 MB）</a></h2>
+<h2 align="center"><a href="https://github.com/JasonHui81/stellar-siege-3d/releases/latest/download/StellarSiege3D-Portable.zip">⬇ 立即下载 星际围攻 3D（Windows 64 位 · 134.8 MB）</a></h2>
 
 <p align="center">
   <a href="https://jasonhui81.github.io/stellar-siege-3d/"><img alt="官网" src="https://img.shields.io/badge/%E5%AE%98%E7%BD%91-%E6%98%9F%E9%99%85%E5%9B%B4%E6%94%BB%203D-5ee7ff?style=for-the-badge"></a>
@@ -20,13 +20,13 @@
 
 ## 三步开玩
 
-1. **下载**：点上面的「立即下载」，得到 `StellarSiege3D-Portable.zip`（119.6 MB）
+1. **下载**：点上面的「立即下载」，得到 `StellarSiege3D-Portable.zip`（134.8 MB）
 2. **解压**：解压到硬盘任意位置（不要在压缩包里直接双击运行）
 3. **启动**：双击 `启动游戏.bat`，等几秒就进游戏；也可以进 `game` 文件夹双击 `Stellar Siege 3D.exe`
 
 打不开时用 `启动游戏-调试.bat`，它会保留命令行窗口把报错显示出来。
 
-## 最新版本 v75
+## 最新版本 v75（2026-11-25 更新：重做部分 3D 建模、修复若干 BUG）
 
 - 新增独立启动器 `Stellar Siege 3D.exe`（不依赖 bat，双击直接进游戏）
 - 游戏内「设置」可切换中英文界面
@@ -75,7 +75,7 @@ python stellar_siege_3d.py
 |------|------|
 | 系统 | Windows 10 / 11 64 位 |
 | 显卡 | 支持 OpenGL（集显也可以） |
-| 磁盘 | 约 280 MB（解压后） |
+| 磁盘 | 约 292 MB（解压后） |
 | 网络 | 只需下载时需要 |
 
 ## 制作
