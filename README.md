@@ -10,13 +10,17 @@
   <img alt="Platform" src="https://img.shields.io/badge/Platform-Windows%2010%2F11%20x64-2ea043?style=for-the-badge">
 </p>
 
-![实机演示](assets/demo.gif)
+![实机演示](assets/demo-2026.gif)
 
 **任何人都能直接下**：不需要 GitHub 账号、不需要登录、不需要装 Python。点上面的按钮，浏览器就开始下载；解压后双击「启动游戏.bat」（或进 `game` 文件夹双击 `Stellar Siege 3D.exe`）即可开玩。
 
 <p align="center">
-  <img src="assets/boss.jpg" width="32%"> <img src="assets/cockpit.jpg" width="32%"> <img src="assets/blackhole.jpg" width="32%">
+  <img src="assets/shot-nebula.jpg" width="32%"> <img src="assets/shot-gameplay.jpg" width="32%"> <img src="assets/shot-boss.jpg" width="32%">
 </p>
+<p align="center">
+  <img src="assets/shot-cockpit.jpg" width="32%"> <img src="assets/shot-missile.jpg" width="32%"> <img src="assets/shot-settings.jpg" width="32%">
+</p>
+<p align="center"><sub>新版实机画面：踏入星云 / 追尾视角 / 歼星舰 / 驾驶舱内景 / 导弹命中 / 设置里可切中英文</sub></p>
 
 ## 三步开玩
 
