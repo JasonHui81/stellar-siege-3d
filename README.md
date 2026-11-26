@@ -10,7 +10,7 @@
   <img alt="Platform" src="https://img.shields.io/badge/Platform-Windows%2010%2F11%20x64-2ea043?style=for-the-badge">
 </p>
 
-![实机演示](assets/demo-2026.gif)
+![实机画面（自动轮播）](assets/slideshow-2026.gif)
 
 **任何人都能直接下**：不需要 GitHub 账号、不需要登录、不需要装 Python。点上面的按钮，浏览器就开始下载；解压后双击「启动游戏.bat」（或进 `game` 文件夹双击 `Stellar Siege 3D.exe`）即可开玩。
 
