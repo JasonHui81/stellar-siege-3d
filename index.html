@@ -110,8 +110,10 @@ section,.dl{scroll-margin-top:120px}
   background:rgba(94,231,255,.16);color:var(--cyan);font-size:12px;margin-right:8px;
 }
 .hero-dl{padding:18px 40px !important;font-size:16px !important}
-.demo{margin-bottom:16px;border:1px solid rgba(143,163,191,.22);border-radius:14px;overflow:hidden;line-height:0}
-.demo img{width:100%;display:block}
+.demo{margin-bottom:16px;border:1px solid rgba(143,163,191,.22);border-radius:14px;overflow:hidden;position:relative;aspect-ratio:16/9;background:#05080f}
+.demo img.ds{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .8s ease}
+.demo img.ds.on{opacity:1}
+.demo .ds-tag{position:absolute;left:14px;bottom:12px;z-index:2;font-size:12px;color:#cfe6f5;background:rgba(6,10,18,.72);border:1px solid rgba(143,163,191,.28);border-radius:8px;padding:4px 10px;line-height:1.4}
 
 /* ===== HERO ===== */
 .hero{position:relative;padding:74px 0 90px;overflow:hidden}
@@ -351,9 +353,18 @@ footer .creds{display:flex;flex-wrap:wrap;gap:8px 26px;justify-content:space-bet
     <div class="sec-head">
       <div class="kicker">SCREENSHOTS</div>
       <h2>真机截图</h2>
-      <p>全部来自实际运行的画面，不是概念图。上面那段就是游戏里原样跑的镜头。</p>
+      <p>全部来自实际运行的画面，不是概念图。上面那张大图会一张一张循环播放这些实机镜头。</p>
     </div>
-    <div class="demo"><img src="assets/demo.gif" alt="星际围攻 3D 实机演示动图"></div>
+    <div class="demo" id="demoShow">
+      <img class="ds on" src="assets/nebula.jpg" data-cap="踏入星云" alt="实机画面：踏入星云">
+      <img class="ds" src="assets/gameplay.jpg" data-cap="飞行中 · HUD 与银河全景" alt="实机画面：HUD 与银河全景">
+      <img class="ds" src="assets/cockpit.jpg" data-cap="驾驶舱内景" alt="实机画面：驾驶舱内景">
+      <img class="ds" src="assets/boss.jpg" data-cap="1400 米外的歼星舰" alt="实机画面：歼星舰">
+      <img class="ds" src="assets/missile.jpg" data-cap="导弹命中歼星舰" alt="实机画面：导弹命中">
+      <img class="ds" src="assets/blackhole.jpg" data-cap="星云尽头的黑洞" alt="实机画面：黑洞">
+      <img class="ds" src="assets/menu.jpg" data-cap="主菜单" alt="实机画面：主菜单">
+      <span class="ds-tag">踏入星云</span>
+    </div>
     <div class="shots">
       <div class="shot s1 js-shot"><img src="assets/gameplay.jpg" alt="游戏内截图：驾驶战机穿越银河"><div class="cap">飞行中 · HUD 与银河全景</div></div>
       <div class="shot s2 js-shot"><img src="assets/boss.jpg" alt="游戏内截图：1400 米外的猎兵级歼星舰"><div class="cap">1400 米外的歼星舰</div></div>
@@ -484,6 +495,22 @@ footer .creds{display:flex;flex-wrap:wrap;gap:8px 26px;justify-content:space-bet
   });
   lb.addEventListener('click', function(){ lb.style.display = 'none'; });
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape') lb.style.display = 'none'; });
+})();
+
+/* 大图轮播：把实机截图一张一张播 */
+(function(){
+  var box = document.getElementById('demoShow');
+  if(!box) return;
+  var imgs = box.querySelectorAll('img.ds');
+  var tag = box.querySelector('.ds-tag');
+  if(imgs.length < 2) return;
+  var i = 0;
+  setInterval(function(){
+    imgs[i].classList.remove('on');
+    i = (i + 1) % imgs.length;
+    imgs[i].classList.add('on');
+    if(tag){ tag.textContent = imgs[i].getAttribute('data-cap') || ''; }
+  }, 4000);
 })();
 </script>
 </body>
